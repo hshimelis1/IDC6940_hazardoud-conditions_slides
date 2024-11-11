@@ -1,0 +1,74 @@
+---
+title: "Cox Proportional Hazards Model: Methods"
+author: "Hermela Shimelis"
+date: last-modified
+date-format: long
+format:
+  revealjs:
+    transition: fade
+    css: custom.css
+course: Capstone Projects in Data Science
+bibliography: references.bib # file contains bibtex for references
+#always_allow_html: true # this allows to get PDF with HTML features
+csl: ieee.csl
+self-contained: true
+execute: 
+  warning: false
+  message: false
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+## Methods {.smaller}
+
+-   The Cox proportional hazards model was used to model the
+    relationship between survival time and different colon cancer
+    treatments.
+-   The time (in days) until event, i.e, death, was modeled as a
+    function of treatment and other variables
+-   Variables tested in the model:
+    -   Treatment: observation (no treatment), amisole (Lev), or
+        amisole + 5-FU
+    -   Patient characteristics: age and sex
+    -   Tumor characteristics: Colon perforation and obstruction,
+        adherence to nearby organs, tumor differentiation, local spread,
+        and recurrence
+
+## Cox regression model
+
+-   Cox regression model is based on the hazard function $h_x(t)$ with
+    covariates at time t given by [@Tibshirani2022-yr]:
+
+-   $h_x(t)=h_0(t)\exp(\beta_1x_1 +\beta_2x_2 + \dots + \beta_p x_p)$ 
+    Where:
+  -   $h_x(t)$ is the hazard function
+  -   $h_0(t)$ is the baseline hazard function
+  -   $\beta_1x_1 + \beta_2x_2 + \dots +\beta_p x_p$ represent the linear
+    combination of covariates and their coefficient
+-   Assumption: The effects of each variable on the outcome is constant
+    over time [@Bellera2010-fq].
+
+## Hazard Ratios
+
+-   The hazards for the observation vs. amisole (Lev), or amisole + 5-FU
+    group with covariate values x~1~, x~2~ and, x~3~ are given by:
+
+-   $hx_1(t)=h_0(t)\exp(\beta_1x_1)$ and
+    $hx_2(t)=h_0(t)\exp(\beta_2x_2)$, respectively
+
+-   The hazard ratio is expressed as: HR = $hx_2(t)$ / $hx_1(t)$ =
+    $\exp[\beta(x_2-x_1)]$
+
+## Testing Proportional Hazards
+
+-   Graphical strategies to assess proportionality assumption
+    [@Bellera2010-fq]
+
+    -   Kaplan-Meier Survival Distribution $S(t)$ plot
+
+    -   Schoenfeld Residuals
+
+    -   log-minus-log plots
+
+## References
