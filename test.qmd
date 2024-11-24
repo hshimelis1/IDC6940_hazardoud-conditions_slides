@@ -1,0 +1,143 @@
+---
+title: "Untitled"
+format: revealjs
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+## Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+To print each model's code snippet and their output in different tabs on the same slide using Quarto (qmd), you can use the `tabset` feature. Here's how you can modify your code to achieve this:
+
+
+# Cox Regression Models
+```{r}
+
+
+## Model Outputs
+
+#| echo: true
+#| message: false
+#| warning: false
+#| include: false
+
+# Load necessary libraries
+library(survival)
+library(gtsummary)
+library(dplyr)
+
+# Base model
+m0 <- coxph(Surv(time, status) ~ 1, data = df)
+
+
+# Univariate: Treatment
+m1 <- coxph(Surv(time, status) ~ rx, data = df)
+tbl_m1 <- tbl_regression(m1, exponentiate = TRUE)
+
+# Full variables: All predictors
+m2 <- coxph(Surv(time, status) ~ rx + age + sex + perfor + adhere + surg + obstruct + differentiation + node4 + local_spread, data = df)
+tbl_m2 <- tbl_regression(m2, exponentiate = TRUE)
+
+# Significant predictors: stepwise-selected variables
+m3 <- coxph(Surv(time, status) ~ rx + age + surg + obstruct + differentiation + node4 + local_spread, data = df)
+tbl_m3 <- tbl_regression(m3, exponentiate = TRUE)
+
+# Final Model
+m4 <- coxph(Surv(time, status) ~ rx + age + surg + strata(obstruct) + strata(differentiation) + node4 + local_spread, data = df)
+tbl_m4 <- tbl_regression(m4, exponentiate = TRUE) %>%
+  modify_table_styling(
+    columns = p.value,
+    rows = p.value < 0.05,
+    text_format = "bold"
+  )
+```
+
+## Model Summaries {.tabset}
+
+### Base Model
+#### Code
+```{r}
+m0 <- coxph(Surv(time, status) ~ 1, data = df)
+summary_m0 = summary(m0)
+c_index_m0 <- concordance(m0)
+cat("Concordance of the base model:",c_index_m0$concordance)
+```
+#### Output
+```{r}
+cat("Concordance of the base model:",c_index_m0$concordance)
+```
+
+### Univariate: Treatment
+#### Code
+```{r}
+m1 <- coxph(Surv(time, status) ~ rx, data = df)
+tbl_m1 <- tbl_regression(m1, exponentiate = TRUE)
+```
+#### Output
+```{r}
+tbl_m1
+```
+
+### Full Variables: All Predictors
+#### Code
+```{r}
+m2 <- coxph(Surv(time, status) ~ rx + age + sex + perfor + adhere + surg + obstruct + differentiation + node4 + local_spread, data = df)
+tbl_m2 <- tbl_regression(m2, exponentiate = TRUE)
+```
+#### Output
+```{r}
+tbl_m2
+```
+
+### Significant Predictors: Stepwise-Selected Variables
+#### Code
+```{r}
+m3 <- coxph(Surv(time, status) ~ rx + age + surg + obstruct + differentiation + node4 + local_spread, data = df)
+tbl_m3 <- tbl_regression(m3, exponentiate = TRUE)
+```
+#### Output
+```{r}
+tbl_m3
+```
+
+### Final Model
+#### Code
+```{r}
+m4 <- coxph(Surv(time, status) ~ rx + age + surg + strata(obstruct) + strata(differentiation) + node4 + local_spread, data = df)
+tbl_m4 <- tbl_regression(m4, exponentiate = TRUE) %>%
+  modify_table_styling(
+    columns = p.value,
+    rows = p.value < 0.05,
+    text_format = "bold"
+  )
+```
+#### Output
+```{r}
+tbl_m4
+```
+
+
+In this example:
+- We use the `tabset` feature to create tabs for each model's code snippet and output.
+- Each tab contains both the code used to fit the model and the resulting summary table.
+- The `modify_table_styling` function is used to bold significant p-values in the final model.
+
+This setup will display each model's code and its output in separate tabs on the same slide, making it easy to review both the code and the results.
+
+If you have any more questions or need further assistance, feel free to ask!
